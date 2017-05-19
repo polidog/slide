@@ -1,0 +1,16 @@
+{
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "gulp"
+  },
+  "dependencies": {
+    "browser-sync": "^2.18.8",
+    "chokidar": "^1.7.0",
+    "gulp": "^3.9.1",
+    "gulp-svg2png": "https://github.com/akoenig/gulp-svg2png#master",
+    "talkie-generator": "^1.0.2",
+    "textlint": "^8.0.1",
+    "textlint-plugin-html": "^0.1.5",
+    "textlint-rule-prh": "^3.1.3"
+  }
+}

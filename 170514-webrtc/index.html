@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+  <link rel="stylesheet" href="../lib/talkie.min.css">
+  <link rel="stylesheet" href="../lib/talkie-default.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.9.1/styles/monokai_sublime.min.css">
+</head>
+<body>
+
+
+<template type="text/x-markdown"
+  layout="title"
+  backface-size="contain"
+  backface-filter="blur(0px) opacity(.2)"
+  backface="./img/webrtc.svg">
+# はじめてのWebRTC
+
+🐘 2017/05/20 - [@polidog](https://twitter.com/polidog)
+
+
+</template>
+
+<template type="text/x-markdown"
+  layout="bullets">
+
+![]()
+<img src="https://avatars1.githubusercontent.com/u/284778?v=3&s=160" style="border-radius: 50%;">
+
+* [@polidog](https://twitter.com/polidog)
+* [tavii.com Inc](http://tavii.com)
+* PHPer, フロントエンド少し書きます。
+* 清水区出身
+
+
+
+</template>
+
+<template type="text/x-markdown"
+  layout="bullets"
+  backface-size="contain"
+  backface-filter="blur(0px) opacity(.2)"
+  backface="./img/symfony.png">
+## 宣伝
+
+Symfony Meetupを東京で開催しています。
+OOPとかDDDとかその辺興味ある方はぜひ！
+
+
+</template>
+
+<template type="text/x-markdown"
+  layout="bullets">
+
+## はじめに
+
+なぜWebRTCに興味を持ったのか？
+
+
+</template>
+
+<template type="text/x-markdown"
+  layout="bullets"
+  backface-size="contain"
+  backface-filter="blur(0px) opacity(.2)"
+  backface="img/js.jpg">
+## JSで簡単にコミュニケーションツールつくれるから
+
+
+</template>
+
+<template type="text/x-markdown"
+  layout="bullets">
+## 今日話すこと
+
+* WebRTCとは？
+* MediaStream
+* RTCPeerConnection
+* NATを超えるために
+* データチャネル
+* PeerJSを使ったWebRTCアプリを作ってみる
+
+
+</template>
+
+<template type="text/x-markdown"
+  layout="title"
+  backface-size="contain"
+  backface-filter="blur(0px) opacity(.2)"
+  invert="true">
+# WebRTCとは？
+
+
+</template>
+
+<template type="text/x-markdown"
+  layout="bullets">
+
+## WebRTCとは？
+
+- リアルタイムコミュニケーション用のAPI
+- ブラウザのみでビデオチャットやファイル共有が可能
+
+
+</template>
+
+<template type="text/x-markdown"
+  layout="bullets">
+
+![](img/trend.png)
+
+* 2011年ぐらいから騒がれてはじめている？
+* 最近はあまり話し聞かない気もする・・・。
+
+
+</template>
+
+<template type="text/x-markdown"
+  layout="bullets">
+
+## 使われているサービス
+
+- [Google Hangout](https://hangouts.google.com/)
+- [Slack](https://https://slack.com/)(ビデオチャット部分)
+- [appear.in](https://appear.in/)
+
+
+ビデオチャット関連のサービスはだいたいWebRTC採用されている
+
+
+</template>
+
+<template type="text/x-markdown"
+  layout="bullets">
+
+## 対応ブラウザ
+
+- Chrome
+- FireFox
+- Opera
+
+
+</template>
+
+<template type="text/x-markdown"
+  layout="bullets">
+## WebRTCの主なAPI
+
+- MediaStream API: 音声や動画を扱うためのAPI
+- RTCPeerConnection API: 音声や動画の通信のためのAPI
+- RTCDataChanel API : データ通信用のAPI
+
+
+
+</template>
+
+<template type="text/x-markdown"
+  layout="title"
+  backface-size="contain"
+  backface-filter="blur(0px) opacity(.2)"
+  invert="true">
+# MediaStream
+
+
+</template>
+
+<template type="text/x-markdown"
+  layout="bullets">
+
+# MediaStream API
+
+- 動画、音声をストリームとして扱うJavaScript API
+- getUserMediaをつかってMediaStreamを取得する
+- videoタグに渡せば動画再生するし、RTCPeerConnectionに渡すこともできる
+
+
+</template>
+
+<template type="text/x-markdown"
+  layout="bullets">
+<img src="img/mediastream.svg" style="height:500px">
+
+
+
+
+</template>
+
+<template type="text/x-markdown"
+  layout="bullets">
+## <a href="demo/mediastream.html" target="blacnk" >demo</a>
+
+
+
+</template>
+
+<template type="text/x-markdown"
+  layout="code">
+## コードを確認してみる
+
+``` JavaScript
+var config = {
+  audio: false,
+  video:  true
+}
+
+navigator.mediaDevices.getUserMedia(config)
+  .then(function(stream){
+    var video = document.getElementById('video-display');
+    video.src = window.URL.createObjectURL(stream);
+  }).catch(function(error){
+    console.log(error)
+  }
+```
+
+
+
+</template>
+
+<template type="text/x-markdown"
+  layout="bullets">
+
+## たった数行でvideo表示できる
+
+
+</template>
+
+<template type="text/x-markdown"
+  layout="bullets">
+
+## navigator.mediaDevices
+
+- 最近のブラウザだとnavigator.mediaDevices.getUserMedia()を使えばよい
+- 過去はベンダーごとprefixついてた。
+- しかもPromiseではない。
+- Firefox47, Chrome51以降ならnavigator.mediaDevices
+
+
+</template>
+
+<template type="text/x-markdown"
+  layout="code">
+
+``` JavaScript
+navigator.getUserMedia  = navigator.getUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia　|| navigator.webkitGetUserMedia;
+
+function getUserMedia(options) {
+
+  if ('getUserMedia' in navigator.mediaDevices) {
+    return navigator.mediaDevices.getUserMedia(options)
+  }
+
+  return new Promise(function(resolve, reject){
+    navigator.getUserMedia(options, resolve, reject)
+  });
+
+}
+
+```
+
+
+</template>
+
+<template type="text/x-markdown"
+  layout="bullets">
+
+ちなみに最新のChromeだとここのデモとか動かない・・・。
+<a href="https://www.html5rocks.com/ja/tutorials/getusermedia/intro/" target="_blank">HTML5 での映像と音声の取得</a>
+
+
+
+</template>
+
+<template type="text/x-markdown"
+  layout="title"
+  backface-size="contain"
+  backface-filter="blur(0px) opacity(.2)"
+  invert="true">
+# RTCPeerConnection
+
+
+</template>
+
+<template type="text/x-markdown"
+  layout="bullets">
+
+## RTCPeerConnection
+
+- RTCPeerConnectionは、P2Pの接続の確立、接続の維持のための処理を提供する
+
+
+</template>
+
+<template type="text/x-markdown"
+  layout="bullets">
+<img src="img/peerconnection.svg" style="height:500px">
+
+
+
+</template>
+
+<template type="text/x-markdown"
+  layout="bullets">
+
+## シグナリング
+
+Peer-to-Peer通信を始める前に、お互いの情報を交換するための処理
+
+<img src="img/sing.svg" style="height:200px">
+
+
+
+</template>
+
+<template type="text/x-markdown"
+  layout="bullets">
+
+## SDP(Session Description Protocol)
+
+P2Pの接続情報を交換するためのプロトコル
+- セッションが含む音声、動画の形式
+- IPアドレス、ポート番号
+- 通信で使用される帯域
+
+
+</template>
+
+<template type="text/x-markdown"
+  layout="bullets">
+
+## demo
+<img src="img/amy.svg" style="height:200px">
+
+</template>
+
+<template type="text/x-markdown"
+  layout="title"
+  backface-size="contain"
+  backface-filter="blur(0px) opacity(.2)"
+  invert="true">
+# NATを超えるために
+
+
+</template>
+
+<template type="text/x-markdown"
+  layout="bullets">
+## ICE
+
+NAT超えるために必要なもの
+
+- RTCPeeerConnectionはICEエージェントを持つ
+- ICEエージェントはIPアドレスとポートの組合わせ(候補)を収集する
+　
+
+
+</template>
+
+<template type="text/x-markdown"
+  layout="bullets">
+## STAN
+
+
+- グローバルなIPとポートを返すサーバ
+- STUNサーバについてはパブリックに公開されているサービスがいくつかある
+- もちろん自前で立てても大丈夫
+
+```
+stun.l.google.com:19302 // google
+stun.services.mozilla.com:3478 / Mozilla
+stun.skyway.io:3478 / NTTCommunications
+```
+
+
+</template>
+
+<template type="text/x-markdown"
+  layout="bullets">
+<img src="https://html5experts.jp/wp-content/uploads/2014/03/webrtc_nat_1.png">
+
+<a href="https://html5experts.jp/mganeko/5554/" target="_blank">壁を越えろ！WebRTCでNAT/Firewallを越えて通信しよう</a>
+
+
+</template>
+
+<template type="text/x-markdown"
+  layout="bullets">
+
+## TURN
+
+Peer-to-Peer通信ができないときに代わりにリレーするサーバ
+
+
+</template>
+
+<template type="text/x-markdown"
+  layout="bullets">
+![](https://html5experts.jp/wp-content/uploads/2014/03/webrtc_fw_1.png)
+
+<a href="https://html5experts.jp/mganeko/5554/" target="_blank">壁を越えろ！WebRTCでNAT/Firewallを越えて通信しよう</a>
+
+
+</template>
+
+<template type="text/x-markdown"
+  layout="bullets">
+
+## ICEエージェント流れ
+
+1. 自身のIPアドレスをOSに確認
+2. 外部のSTUNサーバに問い合わせグローバルIPとポートを取得する
+3. P2P接続に失敗した場合にTURNサーバを利用してリレーする
+
+
+</template>
+
+<template type="text/x-markdown"
+  layout="bullets">
+
+## Trickle ICE
+
+- ICEの拡張
+- ICEの候補が見つかったらすぐに相手と交換する
+- 相手と交換できたら、その情報を使ってすぐに接続試行する
+
+
+</template>
+
+<template type="text/x-markdown"
+  layout="bullets">
+
+## DEMO
+
+## その他
+
+- SRTPやSRTCPやDTLSはまた今度・・・
+
+
+</template>
+
+<template type="text/x-markdown"
+  layout="title"
+  backface-size="contain"
+  backface-filter="blur(0px) opacity(.2)"
+  invert="true">
+
+# データチャネル
+
+
+</template>
+
+<template type="text/x-markdown"
+  layout="bullets">
+
+# 最後に
+
+
+</template>
+
+<template type="text/x-markdown"
+  layout="bullets">
+
+- WebRTCは奥が深い。
+- ネットワークのちきを得るための入り口としていいかも
+- 楽しい
+
+本買いましょう！
+
+
+</template>
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.9.1/highlight.min.js"></script>
+<script src="../lib/talkie.min.js"></script>
+<script>
+  var talkie = Talkie({
+    wide: false
+  })
+  talkie.key('space').subscribe(talkie.next$)
+  talkie.key('s').subscribe(talkie.next$)
+  talkie.key('n').subscribe(talkie.next$)
+  talkie.key('a').subscribe(talkie.prev$)
+  talkie.key('p').subscribe(talkie.prev$)
+
+  document.addEventListener('DOMContentLoaded', function() {
+    talkie.changed.subscribe(function(current) {
+      console.info(talkie.notes[current.getAttribute('data-page')])
+    })
+  })
+</script>
+</body>
+</html>
