@@ -1,17 +1,26 @@
 <!--top-->
 # はじめてのWebRTC
+## (ゆるくWebRTCを学ぼう！)
 
-🐘 2017/05/20 - [@polidog](https://twitter.com/polidog)
+2017/05/20 polidogとネットワーク周りを勉強しよう 　
+
+[@polidog🐘](https://twitter.com/polidog)
 
 -----
 
-![]()
 <img src="https://avatars1.githubusercontent.com/u/284778?v=3&s=160" style="border-radius: 50%;">
 
 * [@polidog](https://twitter.com/polidog)
 * [tavii.com Inc](http://tavii.com)
 * PHPer, フロントエンド少し書きます。
 * 清水区出身
+
+
+-----
+
+## タビィコム
+
+![](img/tavii.jpg)
 
 
 -----
@@ -39,7 +48,7 @@ OOPとかDDDとかその辺興味ある方はぜひ！
 * RTCPeerConnection
 * NATを超えるために
 * データチャネル
-* PeerJSを使ったWebRTCアプリを作ってみる
+* PeerJSとかSkywayについて
 
 -----
 <!--section-->
@@ -77,6 +86,7 @@ OOPとかDDDとかその辺興味ある方はぜひ！
 - Chrome
 - FireFox
 - Opera
+- Edge
 
 -----
 ## WebRTCの主なAPI
@@ -203,6 +213,12 @@ P2Pの接続情報を交換するためのプロトコル
 ## demo
 <img src="img/amy.svg" style="height:200px">
 -----
+![](img/s2.png)
+
+参考: [WebRTCの簡易シグナリング](http://qiita.com/massie_g/items/f5baf316652bbc6fcef1)
+
+-----
+
 <!--section-->
 # NATを超えるために
 
@@ -261,13 +277,37 @@ Peer-to-Peer通信ができないときに代わりにリレーするサーバ
 - ICEの候補が見つかったらすぐに相手と交換する
 - 相手と交換できたら、その情報を使ってすぐに接続試行する
 
+
+-----
+
+![](img/ice1.png)
+
+[WebRTCハンズオン 概要編](http://qiita.com/massie_g/items/916694413353a3293f73)
+
+-----
+
+![](img/ice2.png)
+
+[WebRTCハンズオン 概要編](http://qiita.com/massie_g/items/916694413353a3293f73)
+
 -----
 
 ## DEMO
 
-## その他
+-----
 
-- SRTPやSRTCPやDTLSはまた今度・・・
+## を用意しようとおもったのですが・・・
+
+-----
+
+![](img/ss3.png)
+
+-----
+
+## Let's Encriptが使えない・・・
+WebRTCはSSLじゃないと・・・
+
+DEMOはまた今度・・・
 
 -----
 <!--section-->
@@ -276,12 +316,49 @@ Peer-to-Peer通信ができないときに代わりにリレーするサーバ
 
 -----
 
+## RTCDataChannel
+
+- 双方向のアプリケーションデータのやり取りができる
+- WebSocketに似ている
+- RTCPeerConnectionを確立すると利用できる
+- テキスト、バイナリデータをやりとりできる
+
+-----
+
+## DEMO
+
+-----
+<!--section-->
+# PeerJSとかSkywayについて
+
+-----
+## PeerJS
+
+WebRTCを活用したアプリケーションを開発できるようにするためのJavaScriptライブラリ。
+
+-----
+
+## SkyWay
+
+Web開発者が高度な知識の習得や環境の整備をすることなく、WebRTCを活用したアプリケーションを開発できるs
+
+----
+
+## Skywayを使ったDEMO
+
+-----
+
 # 最後に
 
 -----
 
-- WebRTCは奥が深い。
-- ネットワークのちきを得るための入り口としていいかも
-- 楽しい
+## WebRTCを学んでみた感想
 
-本買いましょう！
+- WebRTCは奥が深い。まだまだ学ぶことがたくさんある
+- ネットワークのを覚えるための入り口として良さそう
+- 楽しい
+- ハイパフォーマンスブラウザネットワーキングは良い本
+
+-----
+
+## おしまい
